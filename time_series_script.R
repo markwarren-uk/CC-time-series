@@ -7,9 +7,10 @@ library(ggplot2)
 library(forecast)
 library(dplyr)
 library(colortools)
+library(lubridate)
 
-# Set working directory ----
-setwd("~/Downloads/CC-time-series-master")
+# # Set working directory ----
+# setwd("~/Downloads/CC-time-series-master")
 
 # Load data ----
 monthly_milk <- read.csv("monthly_milk.csv")  # Milk production per cow per month
@@ -20,7 +21,7 @@ class(monthly_milk)
 
 # Coerce monthly_milk to `Date` class ----
 class(monthly_milk$month)
-monthly_milk$month_date <- as.Date(monthly_milk$month, format = "%Y-%m-%d")
+monthly_milk$month_date <- as_date(monthly_milk$month, format = "%Y-%m-%d")
 # Check it worked
 class(monthly_milk$month_date) 
 
@@ -31,7 +32,7 @@ class(format(monthly_milk$month_date, format = "%Y-%B-%u"))  # class is no longe
 # Coerce daily milk to POSIXct class ----
 head(daily_milk)
 class(daily_milk$date_time)
-daily_milk$date_time_posix <- as.POSIXct(daily_milk$date_time, format = "%Y-%m-%d %H:%M:%S")
+daily_milk$date_time_posix <- as_datetime(daily_milk$date_time, format = "%Y-%m-%d %H:%M:%S")
 # Check it worked
 class(daily_milk$date_time_posix)
 
@@ -41,7 +42,7 @@ head(monthly_milk$bad_date)
 class(monthly_milk$bad_date)
 
 # Coerce bad date to good date ----
-monthly_milk$good_date <- as.Date(monthly_milk$bad_date, format = "%d/%b/%Y-%u")
+monthly_milk$good_date <- as_date(monthly_milk$bad_date, format = "%d/%b/%Y-%u")
 head(monthly_milk$good_date)
 class(monthly_milk$good_date)
 
@@ -64,6 +65,7 @@ ggplot(monthly_milk, aes(x = month_date, y = milk_prod_per_cow_kg)) +
 	geom_line() +
 	geom_smooth(method = "loess", se = FALSE, span = 0.6) + 
 	theme_classic()
+
 
 # Explore seasonal trends ----
 
